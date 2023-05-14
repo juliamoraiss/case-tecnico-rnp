@@ -10,7 +10,7 @@ files = os.listdir('./data')
 for file in files:
     try:
         s3_client.upload_file(f"data/{file}",
-                            f"${local.prefix}-${var.bucket_names}",
+                            "rnt-datalake",
                             f"raw/{file}")
         print(f'{file} SUCCESS')
             

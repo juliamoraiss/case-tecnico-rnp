@@ -20,7 +20,7 @@ df = (
     .option("inferSchema", True)
     .option("header", True)
     .option("delimiter", ";")
-    .load("s3://rnt-datalake/raw/br-capes-colsucup-producao-2017a2020-2022-06-22-bibliografica-artpe.csv")
+    .load("s3://rnp-datalake/raw/br-capes-colsucup-producao-2017a2020-2022-06-22-bibliografica-artpe.csv")
 )
 
 # Escreve a tabela em staging em formato delta
@@ -31,5 +31,5 @@ print("Writing delta table...")
     .mode("overwrite")
     .format("delta")
     .partitionBy("AN_BASE")
-    .save("s3://rnt-datalake/staging-zone/")
+    .save("s3://rnp-datalake/staging-zone/")
 )

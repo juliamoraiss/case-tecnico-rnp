@@ -17,6 +17,6 @@ locals {
 }
 
 variable "bucket_name" {
-  description = "Create S3 buckets with these name"
+  description = "Create S3 buckets with this name"
   default = "datalake"
 }

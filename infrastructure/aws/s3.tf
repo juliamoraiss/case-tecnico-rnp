@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "datalake" {
-  bucket = "${local.prefix}-${var.bucket_names}"
+  bucket = "${local.prefix}-${var.bucket_name}"
   acl    = "private"
 
   tags = local.common_tags

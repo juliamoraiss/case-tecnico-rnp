@@ -8,7 +8,7 @@ variable "prefix" {
 
 # Prefix configuration and project common tags
 locals {
-  prefix = "${var.prefix}-${terraform.workspace}"
+  prefix = "${var.prefix}"
   common_tags = {
     Project      = "CAPES"
     ManagedBy    = "Terraform"

@@ -1,7 +1,5 @@
 
 from pyspark.sql import SparkSession
-import pymongo
-import pandas as pd
 
 # Cria objeto da Spark Session
 spark = (SparkSession.builder.appName("DeltaTable")

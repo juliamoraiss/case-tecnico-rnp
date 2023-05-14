@@ -56,10 +56,10 @@ def pipeline_capes():
                         'InstanceCount': 1,
                     }
                 ],
-                'Ec2KeyName': 'ney-igti-teste',
+                'Ec2KeyName': 'rnp-capes',
                 'KeepJobFlowAliveWhenNoSteps': True,
                 'TerminationProtected': False,
-                'Ec2SubnetId': 'subnet-1df20360'
+                'Ec2SubnetId': 'subnet-c1e4678d'
             },
 
             Applications=[{'Name': 'Spark'}],

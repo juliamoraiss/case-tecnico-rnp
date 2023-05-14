@@ -3,7 +3,7 @@ variable "region_id" {
 }
 
 variable "prefix" {
-  default = "rnt"
+  default = "rnp"
 }
 
 # Prefix configuration and project common tags
@@ -12,7 +12,7 @@ locals {
   common_tags = {
     Project      = "CAPES"
     ManagedBy    = "Terraform"
-    Owner        = "RNT"
+    Owner        = "rnp"
   }
 }
 

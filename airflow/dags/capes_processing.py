@@ -61,6 +61,14 @@ def pipeline_capes():
                 'TerminationProtected': False,
                 'Ec2SubnetId': 'subnet-c1e4678d'
             },
+                BootstrapActions=[
+                {
+                    'Name': 'Copy Jar SQLServer',
+                    'ScriptBootstrapAction': {
+                        'Path': os.environ["emr_bootstrap"],
+                    }
+                },
+            ],
 
             Applications=[{'Name': 'Spark'}],
 

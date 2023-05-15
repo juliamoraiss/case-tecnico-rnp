@@ -12,13 +12,3 @@ resource "aws_s3_bucket" "datalake" {
     }
   }
 }
-
-## ------------ SUBINDO ARQUIVOS DA PASTA CONFIG PARA O BUCKET ------------ ##
-## Script de bootstrap para o EMR
-resource "aws_s3_bucket_object" "emr_bootstrap" {
-  bucket                 = "${var.bucket_name}-config"
-  key                    = "bootstrap_emr.sh"
-  source                 = "../../config/bootstrap_emr.sh"
-  etag                   = filemd5("../../config/bootstrap_emr.sh")
-  server_side_encryption = "AES256"
-}

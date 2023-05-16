@@ -30,7 +30,7 @@ df_parquet = (
 
 ids = df_parquet.select(df_parquet.id).toPandas()['id']
 ids = list(ids)
-dois = df_parquet.select(df_parquet.id).toPandas()['doi']
+dois = df_parquet.select(df_parquet.doi).toPandas()['doi']
 dois = list(ids)
 
 df_novo = df_novo.where(df_novo.ID_ADD_PRODUCAO_INTELECTUAL.isin(ids))

@@ -28,11 +28,21 @@ df_parquet = (
     .load("s3://rnp-datalake/raw/doi/base_doi.parquet")
 )
 
+ids = df_parquet.select(df_parquet.id).toPandas()['id']
+ids = list(ids)
+dois = df_parquet.select(df_parquet.id).toPandas()['doi']
+dois = list(ids)
+
+df_novo = df_novo.where(df_novo.ID_ADD_PRODUCAO_INTELECTUAL.isin(ids))
+df_novo = df_novo.toPandas()
+df_novo["DOI"] = dois
+
 df_velho = DeltaTable.forPath(spark, "s3://rnp-datalake/staging-zone/br-capes-colsucup-producao")
+df_velho = df_velho.withColumn("DOI", lit(0))
 
 (
     df_velho.alias("old")
-    .merge(df_parquet.alias("new"), "old.ID_ADD_PRODUCAO_INTELECTUAL = new.id")
+    .merge(df_novo.alias("new"), "old.ID_ADD_PRODUCAO_INTELECTUAL = new.ID_ADD_PRODUCAO_INTELECTUAL")
     .whenMatchedUpdateAll()
     .whenNotMatchedInsertAll()
     .execute()

@@ -61,14 +61,6 @@ def pipeline_capes():
                 'TerminationProtected': False,
                 'Ec2SubnetId': 'subnet-c1e4678d'
             },
-                BootstrapActions=[
-                {
-                    'Name': 'Copy Jar SQLServer',
-                    'ScriptBootstrapAction': {
-                        'Path': os.environ["emr_bootstrap"],
-                    }
-                },
-            ],
 
             Applications=[{'Name': 'Spark'}],
 
@@ -117,7 +109,7 @@ def pipeline_capes():
                             '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
                             '--master', 'yarn',
                             '--deploy-mode', 'cluster',
-                            's3://rnp-datalake/emr-code/pyspark/extract.py'
+                            's3://rnp-datalake/emr-code/pyspark/delta_spark_insert.py'
                         ]
                 }
             }],

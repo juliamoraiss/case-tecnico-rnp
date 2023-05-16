@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo python3 -m pip install \
+sudo python3 -m pip install --upgrade setuptools \
     urllib3==1.26.6 \
     pandas==1.1.5 -v \
     numpy==1.19.5 -v \

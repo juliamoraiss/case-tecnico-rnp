@@ -18,6 +18,7 @@ df_novo = (
     .read
     .format("csv")
     .option("header", True)
+    .option("delimiter", ";")
     .option("inferSchema", True)
     .load("s3://rnp-datalake/raw/br-capes-colsucup-producao.csv")
 )

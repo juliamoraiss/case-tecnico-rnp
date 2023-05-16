@@ -7,12 +7,7 @@ import pandas as pd
 from pyspark.sql import Row
 
 # Definindo Spark session
-spark = (SparkSession.builder.appName("DeltaTable")
-    .config("spark.jars.packages", "io.delta:delta-core_2.12:1.0.0")
-    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-    .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-    .getOrCreate()
-)
+spark = SparkSession.builder.appName("spark").getOrCreate()
 
 def transformar_titulo(titulo):
     novo_titulo = titulo.replace(' ', '+')
@@ -27,11 +22,10 @@ df = (spark.read
               .option("sep", ";")
               .option("header", "true")
               .option("encoding", "iso-8859-1")
-              .csv('s3://rnp-datalake/staging-zone/br-capes-colsucup-producao')
+              .csv('s3://rnp-datalake/raw/br-capes-colsucup-producao.csv')
               )
 
 df = df.select("ID_ADD_PRODUCAO_INTELECTUAL", "NM_PRODUCAO")
-df = df.limit(5)
 
 list_spark = []
   
@@ -59,14 +53,5 @@ for i in df.rdd.toLocalIterator():
         list_spark.append(data_crossref)
     except:
         continue
-
-dataframe = spark.createDataFrame(list_spark)
-dataframe.show()
-
-(
-    dataframe
-    .write
-    .mode("overwrite")
-    .format("delta")
-    .save("s3://rnp-datalake/bronze-zone/crossref-doi-id")
-)
+    df_final = pd.DataFrame(list_spark)
+    df_final.to_parquet("s3://rnp-datalake/raw/doi/base_doi.parquet")

@@ -7,7 +7,12 @@ import pandas as pd
 from pyspark.sql import Row
 
 # Definindo Spark session
-spark = SparkSession.builder.appName("spark").getOrCreate()
+spark = (SparkSession.builder.appName("DeltaTable")
+    .config("spark.jars.packages", "io.delta:delta-core_2.12:1.0.0")
+    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+    .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+    .getOrCreate()
+)
 
 def transformar_titulo(titulo):
     novo_titulo = titulo.replace(' ', '+')

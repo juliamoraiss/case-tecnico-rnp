@@ -6,6 +6,14 @@ resource "aws_s3_bucket_object" "delta_insert" {
   etag = filemd5("../../etl/delta_spark_insert.py")
 }
 
+resource "aws_s3_bucket_object" "extract_doi" {
+  bucket = aws_s3_bucket.datalake.id
+  key    = "emr-code/pyspark/extract.py"
+  acl    = "private"
+  source = "../../etl/extract.py"
+  etag = filemd5("../../etl/extract.py")
+}
+
 ## ------------ SUBINDO ARQUIVOS DA PASTA CONFIG PARA O BUCKET ------------ ##
 ## Script de bootstrap para o EMR
 resource "aws_s3_bucket_object" "emr_bootstrap" {

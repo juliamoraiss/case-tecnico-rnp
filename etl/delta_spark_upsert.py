@@ -17,6 +17,7 @@ df_novo = (
     spark
     .read
     .format("csv")
+    .option("header", True)
     .option("inferSchema", True)
     .load("s3://rnp-datalake/raw/br-capes-colsucup-producao.csv")
 )

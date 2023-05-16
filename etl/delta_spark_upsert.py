@@ -40,7 +40,6 @@ df_novo = df_novo.toPandas()
 df_novo["DOI"] = dois
 
 df_velho = DeltaTable.forPath(spark, "s3://rnp-datalake/staging-zone/br-capes-colsucup-producao")
-df_velho = df_velho.withColumn("DOI", lit(0))
 
 (
     df_velho.alias("old")

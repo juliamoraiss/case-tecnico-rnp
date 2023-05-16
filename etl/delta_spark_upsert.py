@@ -43,7 +43,7 @@ df_velho = DeltaTable.forPath(spark, "s3://rnp-datalake/staging-zone/br-capes-co
 
 (
     df_velho.alias("old")
-    .merge(df_novo.alias("new"), "old.ID_ADD_PRODUCAO_INTELECTUAL = new.ID_ADD_PRODUCAO_INTELECTUAL")
+    .merge(df_novo, "old.ID_ADD_PRODUCAO_INTELECTUAL = df_novo.ID_ADD_PRODUCAO_INTELECTUAL")
     .whenMatchedUpdateAll()
     .whenNotMatchedInsertAll()
     .execute()

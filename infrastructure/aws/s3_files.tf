@@ -6,11 +6,11 @@ resource "aws_s3_bucket_object" "delta_insert" {
   etag = filemd5("../../etl/delta_spark_insert.py")
 }
 
-resource "aws_s3_bucket_object" "delta_insert" {
+resource "aws_s3_bucket_object" "delta_upsert" {
   bucket = aws_s3_bucket.datalake.id
-  key    = "emr-code/pyspark/delta_spark_insert.py"
+  key    = "emr-code/pyspark/delta_spark_upsert.py"
   acl    = "private"
-  source = "../../etl/delta_spark_insert.py"
+  source = "../../etl/delta_spark_upsert.py"
   etag = filemd5("../../etl/delta_spark_upsert.py")
 }
 

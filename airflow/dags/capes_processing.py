@@ -62,6 +62,15 @@ def pipeline_capes():
                 'Ec2SubnetId': 'subnet-c1e4678d'
             },
 
+            BootstrapActions=[
+                {
+                    'Name': 'Copy Jar SQLServer',
+                    'ScriptBootstrapAction': {
+                        'Path': "s3://rnp-datalake/config/bootstrap_emr.sh",
+                    }
+                },
+],
+
             Applications=[{'Name': 'Spark'}],
 
             Configurations=[{

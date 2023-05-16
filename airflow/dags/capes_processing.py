@@ -136,6 +136,43 @@ def pipeline_capes():
         return True
 
     @task
+    def extract_doi(cid: str, success_before: bool):
+        if success_before:
+            newstep = client.add_job_flow_steps(
+                JobFlowId=cid,
+                Steps=[{
+                    'Name': 'Extract DOI from crossref',
+                    'ActionOnFailure': "TERMINATE_CLUSTER",
+                    'HadoopJarStep': {
+                        'Jar': 'command-runner.jar',
+                        'Args': ['spark-submit',
+                                '--packages', 'io.delta:delta-core_2.12:1.0.0', 
+                                '--conf', 'spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension', 
+                                '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
+                                '--master', 'yarn',
+                                '--deploy-mode', 'cluster',
+                                's3://rnp-datalake/emr-code/pyspark/extract.py'
+                            ]
+                    }
+                }]
+            )
+            return newstep['StepIds'][0]
+
+    @task
+    def wait_extract_doi(cid: str, stepId: str):
+        waiter = client.get_waiter('step_complete')
+
+        waiter.wait(
+            ClusterId=cid,
+            StepId=stepId,
+            WaiterConfig={
+                'Delay': 30,
+                'MaxAttempts': 120
+            }
+        )
+        return True    
+
+    @task
     def terminate_emr_cluster(success_before: str, cid: str):
         if success_before:
             res = client.terminate_job_flows(
@@ -146,7 +183,9 @@ def pipeline_capes():
     # Encadeando a pipeline
     cluid = emr_process_capes_data()
     res_emr = wait_emr_step(cluid)
-    res_ter = terminate_emr_cluster(res_emr, cluid)
+    newstep = extract_doi(cluid, res_emr)
+    res_ba = wait_extract_doi(cluid, newstep)
+    res_ter = terminate_emr_cluster(res_ba, cluid)
 
 
 execucao = pipeline_capes()

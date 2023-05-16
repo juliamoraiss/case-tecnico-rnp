@@ -9,4 +9,5 @@ sudo python3 -m pip install \
     fsspec \
     boto3 \
     requests \
-    fuzzywuzzy==0.18.0
+    fuzzywuzzy==0.18.0 \
+    s3fs==2022.1.0

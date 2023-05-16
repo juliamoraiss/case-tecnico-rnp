@@ -38,12 +38,14 @@ dois = list(ids)
 df_novo = df_novo.where(df_novo.ID_ADD_PRODUCAO_INTELECTUAL.isin(ids))
 df_novo = df_novo.toPandas()
 df_novo["DOI"] = dois
+print(df_novo)
+df_novo = spark.createDataFrame(df_novo)
 
 df_velho = DeltaTable.forPath(spark, "s3://rnp-datalake/staging-zone/br-capes-colsucup-producao")
 
 (
     df_velho.alias("old")
-    .merge(df_novo, "old.ID_ADD_PRODUCAO_INTELECTUAL = df_novo.ID_ADD_PRODUCAO_INTELECTUAL")
+    .merge(df_novo.alias("new"), "old.ID_ADD_PRODUCAO_INTELECTUAL = new.ID_ADD_PRODUCAO_INTELECTUAL")
     .whenMatchedUpdateAll()
     .whenNotMatchedInsertAll()
     .execute()

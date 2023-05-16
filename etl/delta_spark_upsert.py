@@ -39,6 +39,7 @@ df_novo = df_novo.where(df_novo.ID_ADD_PRODUCAO_INTELECTUAL.isin(ids))
 df_novo = df_novo.toPandas()
 df_novo["DOI"] = dois
 print(df_novo)
+df_novo = df_novo.fillna(0)
 df_novo = spark.createDataFrame(df_novo)
 
 df_velho = DeltaTable.forPath(spark, "s3://rnp-datalake/staging-zone/br-capes-colsucup-producao")

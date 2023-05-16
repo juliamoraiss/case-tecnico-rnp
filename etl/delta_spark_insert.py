@@ -18,6 +18,7 @@ df = (
     .option("inferSchema", True)
     .option("header", True)
     .option("delimiter", ";")
+    .option("encoding", "iso-8859-1")
     .load("s3://rnp-datalake/raw/br-capes-colsucup-producao.csv")
 )
 

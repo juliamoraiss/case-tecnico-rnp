@@ -30,27 +30,32 @@ df_parquet = (
     .load("s3://rnp-datalake/raw/doi/base_doi.parquet")
 )
 
-ids = df_parquet.select(df_parquet.id).toPandas()['id']
-ids = list(ids)
-dois = df_parquet.select(df_parquet.doi).toPandas()['doi']
-dois = list(ids)
+# ids = df_parquet.select(df_parquet.id).toPandas()['id']
+# ids = list(ids)
+# dois = df_parquet.select(df_parquet.doi).toPandas()['doi']
+# dois = list(ids)
 
-df_novo = df_novo.where(df_novo.ID_ADD_PRODUCAO_INTELECTUAL.isin(ids))
-df_novo = df_novo.toPandas()
-df_novo["DOI"] = dois
-print(df_novo)
-df_novo = df_novo.fillna(0)
-df_novo = spark.createDataFrame(df_novo)
+# df_novo = df_novo.where(df_novo.ID_ADD_PRODUCAO_INTELECTUAL.isin(ids))
 
-df_velho = DeltaTable.forPath(spark, "s3://rnp-datalake/staging-zone/br-capes-colsucup-producao")
+# df_velho = DeltaTable.forPath(spark, "s3://rnp-datalake/staging-zone/br-capes-colsucup-producao")
+
+# (
+#     df_velho.alias("old")
+#     .merge(df_novo.alias("new"), "old.ID_ADD_PRODUCAO_INTELECTUAL = new.ID_ADD_PRODUCAO_INTELECTUAL")
+#     .whenMatchedUpdateAll()
+#     .whenNotMatchedInsertAll()
+#     .execute()
+# )
+
+# df_velho.generate("symlink_format_manifest")
+
+df_final = df_novo.join(df_parquet, df_novo["ID_ADD_PRODUCAO_INTELECTUAL"] ==  df_parquet["id"], "left").drop("id")
 
 (
-    df_velho.alias("old")
-    .merge(df_novo.alias("new"), "old.ID_ADD_PRODUCAO_INTELECTUAL = new.ID_ADD_PRODUCAO_INTELECTUAL")
-    .whenMatchedUpdateAll()
-    .whenNotMatchedInsertAll()
-    .execute()
+    df_final
+    .write
+    .mode("overwrite")
+    .format("delta")
+    .partitionBy("AN_BASE")
+    .save("s3://rnp-datalake/bronze-zone/base_capes_doi")
 )
-
-df_velho.generate("symlink_format_manifest")
-

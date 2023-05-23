@@ -51,7 +51,7 @@ def buscar_doi(nm_producao):
         sim = similaridade(nm_producao, title)
         if sim >= 90:                              #similaridade deve ser maior que 90%
             doi = item['DOI']
-        return doi
+            return doi
     else:
         return None
 

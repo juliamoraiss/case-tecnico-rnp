@@ -14,8 +14,6 @@ spark = (SparkSession.builder.appName("DeltaTable")
 
 df_capes = spark.read.csv("s3://rnp-datalake/raw/br-capes-colsucup-producao.csv", encoding='iso-8859-1', header=True, sep=";")
 
-df_capes = df_capes.limit(10)
-
 def transformar_titulo(titulo):
     novo_titulo = titulo.replace(' ', '+')
     return novo_titulo
@@ -30,33 +28,33 @@ def buscar_doi(nm_producao):
     url = "https://api.crossref.org/works"
 
     # Transformando título do artigo
-    nm_producao = transformar_titulo(nm_producao)
-    print(nm_producao)
+    nm_producao_transf = transformar_titulo(nm_producao)
 
     # Parâmetros da chamada da API
     parametros = {
-        'query.title': nm_producao,
+        'query.title': nm_producao_transf,
         'rows': 1  # Obtenha apenas 1 resultado
     }
 
-    # Faz a chamada à API
-    response = requests.get(url, params=parametros)
-    print(response)
-    
-    # Obtém os resultados em formato JSON
-    resultados = response.json()
+    try:
+        # Faz a chamada à API
+        response = requests.get(url, params=parametros)
+        
+        # Obtém os resultados em formato JSON
+        resultados = response.json()
 
-    # Verifica se há resultados e extrai o DOI, caso exista
-    if 'items' in resultados['message']:
-        item = resultados['message']['items'][0]
-        title = item['title']
-        print(title)
-        sim = similaridade(nm_producao, title)
-        if sim >= 90:                              #similaridade deve ser maior que 90%
-            doi = item['DOI']
-            return doi
-    else:
-        return None
+        # Verifica se há resultados e extrai o DOI, caso exista
+        if 'items' in resultados['message']:
+            item = resultados['message']['items'][0]
+            title = item['title']
+            sim = similaridade(nm_producao, title)
+            if sim >= 90:                              #similaridade deve ser maior que 90%
+                doi = item['DOI']
+                return doi
+        else:
+            return None
+    except:
+        pass
 
 # Registra a função como uma UDF
 udf_buscar_doi = udf(buscar_doi, StringType())

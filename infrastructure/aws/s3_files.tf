@@ -14,12 +14,12 @@ resource "aws_s3_bucket_object" "delta_upsert" {
   etag = filemd5("../../etl/delta_spark_upsert.py")
 }
 
-resource "aws_s3_bucket_object" "teste" {
+resource "aws_s3_bucket_object" "buscar_doi" {
   bucket = aws_s3_bucket.datalake.id
-  key    = "emr-code/pyspark/teste.py"
+  key    = "emr-code/pyspark/buscar_doi.py"
   acl    = "private"
-  source = "../../etl/teste.py"
-  etag = filemd5("../../etl/teste.py")
+  source = "../../etl/buscar_doi.py"
+  etag = filemd5("../../etl/buscar_doi.py")
 }
 
 resource "aws_s3_bucket_object" "extract_doi" {

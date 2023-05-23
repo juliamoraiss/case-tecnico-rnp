@@ -31,6 +31,7 @@ def buscar_doi(nm_producao):
 
     # Transformando título do artigo
     nm_producao = transformar_titulo(nm_producao)
+    print(nm_producao)
 
     # Parâmetros da chamada da API
     parametros = {
@@ -40,6 +41,7 @@ def buscar_doi(nm_producao):
 
     # Faz a chamada à API
     response = requests.get(url, params=parametros)
+    print(response)
     
     # Obtém os resultados em formato JSON
     resultados = response.json()
@@ -48,6 +50,7 @@ def buscar_doi(nm_producao):
     if 'items' in resultados['message']:
         item = resultados['message']['items'][0]
         title = item['title']
+        print(title)
         sim = similaridade(nm_producao, title)
         if sim >= 90:                              #similaridade deve ser maior que 90%
             doi = item['DOI']

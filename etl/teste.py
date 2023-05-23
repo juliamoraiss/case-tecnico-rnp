@@ -13,7 +13,7 @@ spark = (SparkSession.builder.appName("DeltaTable")
 )
 
 df_capes = spark.read.csv("s3://rnp-datalake/raw/br-capes-colsucup-producao.csv", encoding='iso-8859-1', header=True, sep=";")
-df_capes = df_capes.limit(100000)
+df_capes = df_capes.limit(10000)
 
 def transformar_titulo(titulo):
     novo_titulo = titulo.replace(' ', '+')

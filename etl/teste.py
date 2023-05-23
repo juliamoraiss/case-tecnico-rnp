@@ -13,6 +13,7 @@ spark = (SparkSession.builder.appName("DeltaTable")
 )
 
 df_capes = spark.read.csv("s3://rnp-datalake/raw/br-capes-colsucup-producao.csv", encoding='iso-8859-1', header=True, sep=";")
+df_capes = df_capes.limit(100000)
 
 def transformar_titulo(titulo):
     novo_titulo = titulo.replace(' ', '+')
@@ -61,8 +62,6 @@ udf_buscar_doi = udf(buscar_doi, StringType())
 
 # Adiciona coluna contendo dados de DOI
 df = df_capes.withColumn("DOI", udf_buscar_doi(df_capes["NM_PRODUCAO"]))
-
-df.show()
 
 (
     df
